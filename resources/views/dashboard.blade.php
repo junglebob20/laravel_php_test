@@ -14,7 +14,7 @@
 <div class="wrapper">
     <div class="header">
         <div class="header-logo">
-            <h1>Admin panel</h1>
+            <a href="{{url('/dashboard')}}"><h1>Admin panel</h1></a>
         </div>
         <div class="header-user-info">
             <div class="user-name" id="user_name">Admin</div>
@@ -28,51 +28,12 @@
     <div class="main-wrapper">
         <div class="main-tabs">
             <nav class="nav">
-                <a class="nav-link" href="#">Dashboard</a>
-                <a class="nav-link" href="#">Images</a>
+                <a class="nav-link" href="{{url('/dashboard')}}">Dashboard</a>
+                <a class="nav-link" href="{{url('/images')}}">Images</a>
             </nav>
         </div>
         <div class="main-content">
-            <div class="content-addimage">
-                <form action="">
-                    <div class="form-group">
-                        <label for="addimage_btn" class="btn">Add new image</label>
-                        <input type="file" class="form-control-file" id="addimage_btn">
-                    </div>
-                </form>
-            </div>
-            <div class="content-imagedata">
-                    <table class="table">
-                            <thead>
-                              <tr>
-                                <th scope="col">Id</th>
-                                <th scope="col">Image</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Tag</th>
-                                <th scope="col">Path to folder</th>
-                                <th scope="col">Image format</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <th scope="row">1</th>
-                                <td><img src="assets/images/cat1.jpeg" alt="cat"></td>
-                                <td>Lorem</td>
-                                <td>Lorem</td>
-                                <td>/Lorem/Lorem/Lorem</td>
-                                <td>Lor</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">2</th>
-                                <td><img src="assets/images/cat2.jpg" alt="cat"></td>
-                                <td>Lorem</td>
-                                <td>Lorem</td>
-                                <td>/Lorem/Lorem/Lorem</td>
-                                <td>Lor</td>
-                              </tr>
-                            </tbody>
-                          </table>
-            </div>
+            
         </div>
     </div>
     <script>

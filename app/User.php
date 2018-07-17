@@ -26,4 +26,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password'
     ];
+
+    /**
+    * Get all images for current user.
+    */
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
 }

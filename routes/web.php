@@ -16,6 +16,8 @@ Route::group(['middleware' => ['guest']], function () {
     Route::get('/', function () {
         return redirect('login');
     });
+
+    //login
     Route::get('login', 'LoginController@show');
     Route::get('logincheck', 'LoginController@log_in');
 });
@@ -26,5 +28,15 @@ Route::group(['middleware' => ['auth']], function () {
         return redirect('dashboard');
     });
     Route::get('logout', 'LoginController@logout');
+
+    //dashboard
     Route::get('dashboard', 'DashboardController@index');
+
+    //images
+    Route::get('/images','ImagesController@index');
+    Route::post('/image', 'ImagesController@store');
+    Route::get('/image/delete/{id}', 'ImagesController@destroy');
+
+    //imageSort
+    Route::get('/images/sorting/{column}/{option}', 'ImagesController@sort');
 });
