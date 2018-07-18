@@ -11,32 +11,28 @@
 |
 */
 
-//guest routers
-Route::group(['middleware' => ['guest']], function () {
-    Route::get('/', function () {
-        return redirect('login');
-    });
-
-    //login
-    Route::get('login', 'LoginController@show');
-    Route::get('logincheck', 'LoginController@log_in');
-});
-
-//auth routers
-Route::group(['middleware' => ['auth']], function () {
-    Route::get('/', function () {
+Route::get('/', function () {
+    if(Auth::check()){
         return redirect('dashboard');
-    });
-    Route::get('logout', 'LoginController@logout');
-
-    //dashboard
-    Route::get('dashboard', 'DashboardController@index');
-
-    //images
-    Route::get('/images','ImagesController@index');
-    Route::post('/image', 'ImagesController@store');
-    Route::get('/image/delete/{id}', 'ImagesController@destroy');
-
-    //imageSort
-    Route::get('/images/sorting/{column}/{option}', 'ImagesController@sort');
+    }
+    return redirect('login');
 });
+
+Route::get('login', 'LoginController@show');
+Route::get('logincheck', 'LoginController@log_in');
+
+Route::get('logout', 'LoginController@logout');
+
+//dashboard
+Route::get('dashboard', 'DashboardController@index');
+
+//images
+Route::get('/images','ImagesController@index');
+Route::post('/image', 'ImagesController@store');
+Route::get('/image/delete/{id}', 'ImagesController@destroy');
+
+
+//imageFiltr
+Route::get('/images/filtr/{column}/{option}', 'ImagesController@filtr');
+
+

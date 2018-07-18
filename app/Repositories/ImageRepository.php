@@ -26,4 +26,8 @@ class ImageRepository
   {
     return $this->images->orderBy($column,$option)->get();
   }
+  public function getItemsFiltr($request,$column,$option)
+  {
+    return $this->images->filterById($request->input('id'))->filterByName($request->input('name'))->filterByTag($request->input('tag'))->filterByPath($request->input('path'))->filterByExt($request->input('ext'))->filterByCreated_at($request->input('created_at'))->filterByUpdated_at($request->input('updated_at'))->orderBy($column,$option)->get();
+  }
 }

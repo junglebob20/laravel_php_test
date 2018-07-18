@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.4/css/tether.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/admin_panel.css">
+    <link rel="stylesheet" href="{{ url('css/admin_panel.css') }}">
 </head>
 <body>
 
@@ -29,11 +29,12 @@
     <div class="main-wrapper">
         <div class="main-tabs">
             <nav class="nav">
-                <a class="nav-link" href="{{url('/dashboard')}}">Dashboard</a>
-                <a class="nav-link" href="{{url('/images')}}">Images</a>
+                <a class="nav-link" href="{{url('/dashboard')}}"><i class="fa fa-tachometer" aria-hidden="true"></i>Dashboard</a>
+                <a class="nav-link" href="{{url('/images')}}"><i class="fa fa-picture-o" aria-hidden="true"></i>Images</a>
             </nav>
         </div>
         <div class="main-content">
+        <?php if(!isset($form)){ ?>
             <div class="content-addimage">
                 @if (session('success'))
                     <div class="image-status" style="color:green;">
@@ -50,34 +51,73 @@
 
                     </div>
                 @endif
-                <form id="addImage_form" action="{{url('/image')}}" method="post" enctype="multipart/form-data">
+                <button type="button" data-toggle="modal" data-target="#modal-open-add-img" class="btn btn-primary">Add new image</button>
+            </div>
+        <?php }?>
+            @if (count($items)>0)
+            <div class="data-filt" style="margin-bottom: 10px;">
+                <form action="{{ action('ImagesController@filtr', ['column' => $sortColumn[0], 'option' => $sortColumn[1]]) }}" method="get">
                     <div class="form-group">
-                        <label for="addimage_input" class="btn">Add new image</label>
-                        <input type="file" name="image" class="form-control-file" id="addimage_input">
+                        <label >Id</label>
+                        <input type="text" class="form-control" name="id" placeholder="Enter Id" value="<?php echo isset($form->id) ? $form->id : null; ?>">
                     </div>
+                    <div class="form-group">
+                        <label >Name</label>
+                        <input type="text" class="form-control" name="name" placeholder="Enter Name" value="<?php echo isset($form->name) ? $form->name : null; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label >Tag</label>
+                        <input type="text" class="form-control" name="tag" placeholder="Enter Tag" value="<?php echo isset($form->tag) ? $form->tag : null; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label >Path</label>
+                        <input type="text" class="form-control" name="path" placeholder="Enter Path" value="<?php echo isset($form->path) ? $form->path : null; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label >Ext</label>
+                        <input type="text" class="form-control" name="ext" placeholder="Enter Ext" value="<?php echo isset($form->ext) ? $form->ext : null; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label >Created_at</label>
+                        <input type="text" class="form-control" name="created_at" placeholder="Enter Created_at" value="<?php echo isset($form->created_at) ? $form->created_at : null; ?>">
+                    </div>
+                    <div class="form-group">
+                        <label >Updated_at</label>
+                        <input type="text" class="form-control" name="updated_at" placeholder="Enter Updated_at" value="<?php echo isset($form->updated_at) ? $form->updated_at : null; ?>"> 
+                    </div>
+                     
+                        <button class="btn btn-secondary" type="submit">Submit</button>
                 </form>
             </div>
             <div class="content-imagedata">
-                    @if (count($items)>0)
                     <table class="table">
                             <thead>
                               <tr>
-                                <th scope="col" class="table-col"><a href="{{ action('ImagesController@sort', ['column' => 'id', 'option' => 'asc']) }}"></a>Id</th>
-                                <th scope="col" class="table-col">Image</th>
-                                <th scope="col" class="table-col"><a href="{{ action('ImagesController@sort', ['column' => 'name', 'option' => 'asc']) }}"></a>Name</th>
-                                <th scope="col" class="table-col"><a href="{{ action('ImagesController@sort', ['column' => 'tag', 'option' => 'asc']) }}"></a>Tag</th>
-                                <th scope="col" class="table-col"><a href="{{ action('ImagesController@sort', ['column' => 'path', 'option' => 'asc']) }}"></a>Path to folder</th>
-                                <th scope="col" class="table-col"><a href="{{ action('ImagesController@sort', ['column' => 'ext', 'option' => 'asc']) }}"></a>Image format</th>
-                                <th scope="col" class="table-col"><a href="{{ action('ImagesController@sort', ['column' => 'created_at', 'option' => 'asc']) }}"></a>Created</th>
-                                <th scope="col" class="table-col"><a href="{{ action('ImagesController@sort', ['column' => 'updated_at', 'option' => 'asc']) }}"></a>Updated</th>
-                                <th scope="col" class="table-col"></th>
+                              @foreach ($items[0]->getAttributes() as $key => $val)
+                                @if($key===$sortColumn[0])
+                                    <th scope="col" class="table-col" style="background:#f9f9f9;">{{$key}}
+                                    @if($sortColumn[1]==='desc')
+                                        <a href="{{ action('ImagesController@filtr', ['column' => $key, 'option' => 'asc']) }}"></a>
+                                        <i class="fa fa-arrow-down" aria-hidden="true"></i>
+                                    @elseif ($sortColumn[1]==='asc')
+                                        <a href="{{ action('ImagesController@filtr', ['column' => $key, 'option' => 'desc']) }}"></a>
+                                        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                    @endif
+                                    </th>
+                                @else
+                                    <th scope="col" class="table-col"><a href="{{ action('ImagesController@filtr', ['column' => $key, 'option' => 'asc']) }}"></a>{{$key}}</th>
+                                @endif
+                                @if($key==='id')
+                                    <th scope="col" class="table-col" style="background:#fff;">image</th>
+                                @endif
+                              @endforeach
                               </tr>
                             </thead>
                             <tbody>
                             @foreach($items as $k=>$item)
                                 <tr class="table-row">
                                     <th scope="row">{{$item->id}}</th>
-                                    <td><img data-toggle="modal" data-target="#modal-open-img" class="img-item" src="{{$item->path.$item->name.'.'.$item->ext}}" alt="{{$item->name}}"></td>
+                                    <td><img data-toggle="modal" data-target="#modal-open-img" class="img-item" src="{{ url($item->path.$item->name.'.'.$item->ext) }}" alt="{{$item->name}}"></td>
                                     <td>{{$item->name}}</td>
                                     <td>{{$item->tag}}</td>
                                     <td>{{$item->path}}</td>
@@ -89,6 +129,10 @@
                             @endforeach
                             </tbody>
                           </table>
+                    @else
+                        <div class="sup-div" style="text-align: center;">
+                            <h1>You have 0 images</h1>
+                        </div>
                     @endif
             </div>
         </div>
@@ -102,10 +146,35 @@
           </div>
         </div>
     </div>
+    <div class="modal" id="modal-open-add-img" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+          <form id="addImage_form" action="{{url('/image')}}" method="post" enctype="multipart/form-data">
+                <div class="modal-header">
+                <h5 class="modal-title">Add New Image</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="addimage_btn" class="btn">Choose image</label>
+                        <input style="display:none;" name="image" type="file" class="form-control-file" id="addimage_btn">
+                    </div>
+                    <div class="form-group">
+                        <label for="tag_add" class="btn">Tag:</label>
+                        <input type="text" name="tag_add" class="form-control" id="tag_add" placeholder="Enter tag" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
     <script>
-        $('#addimage_input').change(function(){
-            $('#addImage_form').submit();
-        });
         $('.img-item').click(function(){
             var img_item=$(this).clone();
             $('#modal-open-img').find('.modal-body').empty().prepend(img_item);
@@ -122,6 +191,15 @@
                 $('#user_modal').removeClass('modal-open');
             }
         });
+        <?php if(isset($form)){ ?>
+            var url_string = window.location.href;
+            var url = new URL(url_string);
+            var filter_params = url.search;
+            $('.table-col').each(function(){
+                var col=$(this);
+                col.find('a').attr('href',col.find('a').attr('href')+filter_params);
+            });
+        <?php }?>
     </script>
 </div>
 

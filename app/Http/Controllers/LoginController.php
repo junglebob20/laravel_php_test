@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Session;
 class LoginController extends Controller
 {
     public function show(){
-       return view('login');
+        if(Auth::check()){
+            return redirect('dashboard');
+        }
+        return view('login');
     }
     /**
      * Store the incoming blog post.

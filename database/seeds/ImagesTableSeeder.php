@@ -12,11 +12,5 @@ class ImagesTableSeeder extends Seeder
     public function run()
     {
         DB::table('images')->delete();
-        Image::create(array(
-            'name' => 'Image_Name',
-            'tag' => 'tag1',
-            'path' => 'storage/images/',
-            'ext' => 'jpeg',
-        ));
     }
 }

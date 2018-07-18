@@ -7,7 +7,7 @@ use App\Image;
 use Intervention\Image\ImageManagerStatic as ImageInt;
 use \Validator;
 use App\Repositories\ImageRepository;
-
+use Illuminate\Support\Facades\Auth;
 class ImagesController extends Controller
 {
      /**
@@ -23,7 +23,7 @@ class ImagesController extends Controller
      */
     public function __construct(ImageRepository $images)
     {
-        $this->middleware('auth');
+
         $this->images = $images;
     }
     /**
@@ -33,9 +33,27 @@ class ImagesController extends Controller
      */
     public function index(Request $request)
     {
+        if(Auth::check()){
+            return view('images', [
+                'items' => $this->images->getItems(),
+                'sortColumn' => ['created_at','asc']
+            ]);
+        }
+        return redirect('login');
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  string  $column
+     * @param  string  $option
+     * @return \Illuminate\Http\Response
+     */
+    public function filtr(Request $request,$column,$option)
+    {
         return view('images', [
-            'items' => $this->images->getItems(),
-            'sortColumn' => ['created','asc']
+            'items' => $this->images->getItemsFiltr($request,$column,$option),
+            'sortColumn' => [$column,$option],
+            'form' => $request
         ]);
     }
     /**
@@ -47,7 +65,10 @@ class ImagesController extends Controller
      */
     public function sort(Request $request,$column,$option)
     {
-        return redirect('images')->with('items',$this->images->getItemsBy($column,$option));
+        /*return view('images', [
+            'items' => $this->images->getItemsBy($column,$option),
+            'sortColumn' => [$column,$option]
+        ]);*/
     }
     /**
      * Show the form for creating a new resource.
@@ -82,10 +103,12 @@ class ImagesController extends Controller
                 $img->resize(512, 512);
             }
             $img->save($destinationPath.'/'.$input['imageName'].'.'.$input['imageExt']);
+            
+            $tag=$request->input('tag_add');
 
             Image::create([
                 'name' => $input['imageName'],
-                'tag' => 'tag',
+                'tag' => $tag,
                 'path'=> 'storage/images/',
                 'ext'=> $input['imageExt']
             ]);
@@ -105,6 +128,7 @@ class ImagesController extends Controller
     protected function getValidator(Request $request)
     {
         $rules = [
+            'tag_add' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ];
 
