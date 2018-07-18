@@ -7,5 +7,7 @@ By default, the username is root and you can leave the password field empty. (Th
 By default, the username is root and password is also root. (This is for Lamp)
 Run <p style="background:#e9e9e9;">php artisan key:generate</p>
 Run <p style="background:#e9e9e9;">php artisan migrate</p>
+Run <p style="background:#e9e9e9;">php artisan db:seed</p>
+Run <p style="background:#e9e9e9;">php artisan storage:link</p>
 Run <p style="background:#e9e9e9;">php artisan serve</p>
 Go to <a href="localhost:8000">localhost:8000</a>
